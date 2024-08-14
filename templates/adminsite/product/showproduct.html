@@ -1,0 +1,168 @@
+{% extends 'adminsite/dashboard.html' %}
+
+
+
+{% block admincontent %}
+
+<main id="main" class="main">
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1>Product Data</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item">Products</li>
+          </ol>
+        </nav>
+      </div>
+      <div>
+        <a href="{% url 'addproduct' %}" class="btn btn-primary">Add Product</a>
+      </div>
+    </div>
+  </div>
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <!-- Table with stripped rows -->
+            <table class="table datatable">
+              <thead>
+                <tr>
+                  <th><a href="#">Title</a></th>
+                  <th>Price</th>
+                  <th>Descount Price</th>
+                  <th>Description</th>
+                  <th>Colors</th>
+                  <th>Sizes</th>
+                  <th>Materials</th>
+                  <th>Image</th>
+                  <th>Action</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for product in products %}
+                <tr>
+                  <td>{{ product.product_name }}</td>
+                  <td>{{ product.price }}</td>
+                  <td>{{ product.descountprice }}</td>
+                  <td>{{ product.product_description }}</td>
+                  <td>
+                    {% for color in product.color_variant.all %}
+                    {{ color.colorname }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                  </td>
+                  <td>
+                    {% for size in product.size_variant.all %}
+                    {{ size.sizename }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                  </td>
+                  <td>
+                    {% for material in product.material_variant.all %}
+                    {{ material.materialname }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                  </td>
+                  <td>
+                    {% if product.product_images.first %}
+                    <img src="{{ product.product_images.first.image.url}}" alt="Product Image"
+                      style="max-width: 100px;">
+                    {% else %}
+                    <img src="/media/default.jpg" alt="Default Image" style="max-width: 100px;">
+                    {% endif %}
+                  </td>
+                  <td>
+                    <a href="{% url 'updateprodect' product.id %}"><button type="button" class="btn btn-primary">Update
+                        Product</button></a>
+                  </td>
+                  <td>
+                    <a href="{% url 'deleteproduct' product.id %}"><button type="button" class="btn btn-danger">Delete
+                        Product</button></a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+               Table with stripped rows -->
+  <!-- <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th><a href="#">Title</a></th>
+                    <th>Price</th>
+                    <th>Descount Price</th>
+
+                    <th>Description</th>
+                    <th>Colors</th>
+                    <th>Sizes</th>
+                    <th>Materials</th>
+                    <th>Image</th>
+
+                    <th>Action</th>
+                    <th>Action</th>                    
+                  </tr>
+                </thead>
+                <tbody>
+                 
+                {% comment %} {% for n in data %}
+                    
+                  <tr>
+                    <td>{{n.title}}</td>
+                    <td>{{n.price}}</td>
+                    <td>{{n.descountprice}}</td>
+
+                    <td>{{n.description}}</td>
+                    <td>{{n.colors}}</td>
+                    <td>{{n.sizes}}</td>
+                    <td>{{n.materials}}</td>
+
+                    <td>
+                        <img src="/media/{{ n.image }}" alt="Profile Image" style="max-width: 100px;">
+                           
+                    </td>
+                    <td>
+                        <div class="row mb-4">
+                            <div>
+                               <a href="{% url 'updatetshirt' n.id %}"><button type="submit" class="btn btn-primary">Update Tshirts</button></a>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="row mb-2">  
+                           <a href="{% url 'deletetshirt' n.id %}"> <button type="submit" class="btn btn-primary">Delete Tshirts</button></a>
+                        </div>
+                    </td>
+
+
+                  </tr>
+                {% endfor %}
+                      {% endcomment %}
+                </tbody>
+              </table> -->
+  <!-- End Table with stripped rows 
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section> -->
+
+</main>
+
+
+{% endblock admincontent %}

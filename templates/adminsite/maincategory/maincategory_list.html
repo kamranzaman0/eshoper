@@ -1,0 +1,70 @@
+{% extends 'adminsite/dashboard.html' %}
+
+
+
+{% block admincontent %}
+
+<main id="main" class="main">
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1>Main Catagory Data</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item">Main Category</li>
+          </ol>
+        </nav>
+      </div>
+      <div>
+        <a href="{% url 'maincategory_create' %}" class="btn btn-primary">Add Main Category</a>
+
+      </div>
+    </div>
+  </div>
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <!-- Table with stripped rows -->
+            <table class="table datatable">
+              <thead>
+                <tr>
+                  <th><a href="#">Title</a></th>
+                  <th>Slug</th>
+                  <th>Images</th>
+                  <th>Action</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for maincategory in maincategory %}
+                <tr>
+                  <td>{{ maincategory.name }}</td>
+                  <td>{{ maincategory.slug }}</td>
+                  <td>
+                    <img src="{{ maincategory.images.url }}" alt="{{ maincategory.name }}" width="100">
+                  </td>
+                  
+                  <td>
+                    <a href="{% url 'maincategory_update' maincategory.id %}"><button type="button" class="btn btn-primary">Update</button></a>
+                  </td>
+                  
+                  <td>
+                    <a href="{% url 'maincategory_delete' maincategory.id %}"><button type="button" class="btn btn-danger">Delete</button></a>
+                  </td> 
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+
+{% endblock admincontent %}

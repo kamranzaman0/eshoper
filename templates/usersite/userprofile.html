@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5 justify-content-center"> <!-- Centering the row -->
+        <div class="col-md-9">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="card-title mb-0 ">Your Orders</h2>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Status</th>
+                            <th>Order Place Date</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td><a href="{% url 'order_detail' order.id %}">{{ order.id }}</a></td>
+                            <td>{{ order.status }}</td>
+                            <td>{{ order.created_at }}</td>
+                            <td>{{ order.total_price }}</td>
+
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3">No orders found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Shop Start -->
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5 justify-content-center"> <!-- Centering the row -->
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="card-title mb-0 ">Profile</h2>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- User Image -->
+                            <div class="col-md-4">
+                                <div class="text-center mb-3">
+                                    <img src="/media/{{ profile.profile_picture }}" alt="User Image"
+                                        class="img-fluid rounded-circle" style="width: 150px; height: 150px;">
+                                    <input type="file" name="profile_picture" id="user_image">
+                                </div>
+                            </div>
+                            <!-- Username and Email -->
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="username" style="font-weight: bold;">Username:</label> <span
+                                        style="color: #333;">{{ user.username }}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email" style="font-weight: bold;">Email:</label> <span
+                                        style="color: #333;">{{ user.email }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="first_name">First Name</label>
+                            <input type="text" class="form-control" name="first_name" id="first_name"
+                                value="{{ profile.first_name }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Last Name</label>
+                            <input type="text" class="form-control" name="last_name" id="last_name"
+                                value="{{ profile.last_name }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone_number">Phone Number</label>
+                            <input type="text" class="form-control" name="phone_number" id="phone_number"
+                                value="{{ profile.phone_number }}" {% if profile.is_phone_verified %}disabled{% endif %}>
+                            {% if profile.is_phone_verified %}
+                            <span class="verified-message">Phone Number is Verified</span>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" class="form-control" name="address" id="address"
+                                value="{{ profile.address }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="date_of_birth">Date of Birth</label>
+                            <input type="date" class="form-control" name="date_of_birth" id="date_of_birth"
+                                value="{{ profile.date_of_birth|date:'Y-m-d' }}">
+                        </div>
+                        <!-- Additional fields can be added here -->
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- End Main Content -->
+    </div>
+    <div class="row px-xl-5 justify-content-center mt-3">
+        <div class="col-md-9 d-flex justify-content-center">
+            <form method="POST" action="{% url 'userlogout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Logout</button>
+            </form>
+        </div>
+    </div>
+    
+</div>
+<!-- Shop End -->
+
+{% endblock content %}

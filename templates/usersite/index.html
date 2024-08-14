@@ -1,0 +1,237 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style>
+    .product-img-size {
+        width: 100%;
+        height: 300px; /* Adjust the height as needed */
+        object-fit: cover;
+    }
+</style>
+
+
+    <!-- Featured Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5 pb-3">
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Quality Product</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-shipping-fast text-primary m-0 mr-2"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Free Shipping</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fas fa-exchange-alt text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">14-Day Return</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-phone-volume text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">24/7 Support</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Featured End -->
+
+
+    <!-- Main Categories Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5 pb-3">
+            
+            {% for maincategory in maincategory %}
+            <div class="col-lg-4 col-md-6 pb-1">
+                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
+                    <p class="text-right">{{maincategory.product_count }} Products</p>
+                    <a href="{% url 'maincategory_detail' maincategory.slug %}" class="cat-img position-relative overflow-hidden mb-3">
+                        <img class="img-fluid" src="{{maincategory.images.url}}" alt="">
+                    </a>
+                    <h5 class="font-weight-semi-bold m-0">{{maincategory.name}}</h5>
+                </div>
+            </div>
+            {% endfor %}
+                    
+        </div>
+    </div>
+    <!--Main Categories End -->
+
+
+    <!-- Offer Start -->
+    <div class="container-fluid offer pt-5">
+        <div class="row px-xl-5">
+                
+            {% for collection in collection %}
+                <div class="col-md-6 pb-4">
+                    <div class="position-relative bg-secondary text-center text-md-right text-white mb-2 py-5 px-5">
+                        <img src="{{collection.image.url}}" alt="">
+                        <div class="position-relative" style="z-index: 1;">
+                            <h5 class="text-uppercase text-primary mb-3">{{collection.discount}}</h5>
+                            <h1 class="mb-4 font-weight-semi-bold">{{collection.name}}</h1>
+                            <a href="{% url 'collection_detail' collection.slug %}" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Offer End -->
+
+
+    <!-- Products Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Trandy Products</span></h2>
+        </div>
+        <div class="row px-xl-5 pb-3">
+            
+            {% for data in trendy_products %}
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        {% if data.product_images.first %}
+                        <img class="img-fluid product-img-size" src="{{ data.product_images.first.image.url}}" alt="">
+
+                        {% endif %}
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">{{data.product_name}}</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>${{data.descountprice}}</h6><h6 class="text-muted ml-2"><del>${{data.price}}</del></h6>
+                        </div>
+                    </div>
+                     <div class="card-footer d-flex justify-content-center bg-light border">
+                        <a href="{% url 'detail' data.id %}" class="btn btn-sm text-dark p-0">
+                            <i class="fas fa-eye text-primary mr-1"></i>
+                            View Detail
+                        </a>
+                        {% comment %} <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a> {% endcomment %}
+                    </div> 
+                </div>
+            </div>
+                
+            {% endfor %}  
+            
+        </div>
+    </div>
+    <!-- Products End -->
+
+
+    <!-- Subscribe Start -->
+    <div class="container-fluid bg-secondary my-5">
+        <div class="row justify-content-md-center py-5 px-xl-5">
+            <div class="col-md-6 col-12 py-5">
+                <div class="text-center mb-2 pb-2">
+                    <h2 class="section-title px-5 mb-3"><span class="bg-secondary px-2">Subscribe to Our Newsletter</span></h2>
+                    <p>Subscribed us for Lates and New updates and get updates whenever we ad new products or new Offers.</p>
+                </div>
+                <form method="post" action="{% url 'subscribe' %}">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="email" name="email" class="form-control border-white p-4" placeholder="Email Goes Here" required>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary px-4">Subscribe</button>
+                        </div>
+                    </div>
+                </form>
+                {% if messages %}
+                    <div class="mt-3">
+                        {% for message in messages %}
+                            <div class="alert alert-info">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Subscribe End -->
+
+
+    <!-- Products Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Just Arrived</span></h2>
+        </div>
+        <div class="row px-xl-5 pb-3">
+            
+            {% for data in just_arrived_products %}
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        {% if data.product_images.first %}
+                        <img class="img-fluid product-img-size" src="{{ data.product_images.first.image.url}}" alt="">
+
+                        {% endif %}
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">{{data.product_name}}</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>${{data.descountprice}}</h6><h6 class="text-muted ml-2"><del>${{data.price}}</del></h6>
+                        </div>
+                    </div>
+                     <div class="card-footer d-flex justify-content-center bg-light border">
+                        <a href="{% url 'detail' data.id %}" class="btn btn-sm text-dark p-0">
+                            <i class="fas fa-eye text-primary mr-1"></i>
+                            View Detail
+                        </a>
+                        {% comment %} <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a> {% endcomment %}
+                    </div> 
+                </div>
+            </div>
+                
+            {% endfor %} 
+            
+        </div>
+    </div>
+    <!-- Products End -->
+
+
+    <!-- Vendor Start -->
+    <!-- <div class="container-fluid py-5">
+        <div class="row px-xl-5">
+            <div class="col">
+                <div class="owl-carousel vendor-carousel">
+                    <div class="vendor-item border p-4">
+                        <img src="{% static 'img/vendor-1.jpg' %}" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="{% static 'img/vendor-2.jpg' %}" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="{% static 'img/vendor-3.jpg' %}" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="{% static 'img/vendor-4.jpg' %}" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="{% static 'img/vendor-5.jpg' %}" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="{% static 'img/vendor-6.jpg' %}" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="{% static 'img/vendor-7.jpg' %}" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="{% static 'img/vendor-8.jpg' %}" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <!-- Vendor End -->
+
+
+        
+{% endblock content %}
+    

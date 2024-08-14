@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Shop Detail</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a href="">Home</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Shop Detail</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+
+<!-- Shop Detail Start -->
+<div class="container-fluid py-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-5 pb-5">
+            <div id="product-carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner border">
+                    {% if product.product_images.exists %}
+                        {% for image in product.product_images.all %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img class="w-100 h-100" src="{{ image.image.url }}" alt="Image">
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="carousel-item active">
+                            <img class="w-100 h-100" src="{% static 'default.jpg' %}" alt="Default Image">
+                        </div>
+                    {% endif %}
+                </div>
+                <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
+                    <i class="fa fa-2x fa-angle-left text-dark"></i>
+                </a>
+                <a class="carousel-control-next" href="#product-carousel" data-slide="next">
+                    <i class="fa fa-2x fa-angle-right text-dark"></i>
+                </a>
+            </div>
+        </div>
+        
+
+        <div class="col-lg-7 pb-5">
+            {% if messages %}
+            <div class="container mt-3">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <h3 class="font-weight-semi-bold">{{ product.product_name }}</h3>
+            <div class="d-flex mb-3">
+                <div class="text-primary mr-2">
+                    <small class="fas fa-star"></small>
+                    <small class="fas fa-star"></small>
+                    <small class="fas fa-star"></small>
+                    <small class="fas fa-star-half-alt"></small>
+                    <small class="far fa-star"></small>
+                </div>
+                <small class="pt-1">(50 Reviews)</small>
+            </div>
+            <h3 class="font-weight-semi-bold mb-4">${{ product.descountprice }}.00</h3>
+            <p class="mb-4">{{ product.product_description }}</p>
+            <div class="d-flex mb-3">
+                <p class="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
+                <form id="add-to-cart-form">
+                    {% for size in product.size_variant.all %}
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="checkbox" class="custom-control-input size-checkbox" id="size-{{ size.id }}"
+                               name="size-{{ size.id }}" value="{{ size.sizename }}">
+                        <label class="custom-control-label"
+                               for="size-{{ size.id }}">{{ size.sizename }}</label>
+                    </div>
+                    {% endfor %}
+                </form>
+            </div>
+            <div class="d-flex mb-4">
+                <p class="text-dark font-weight-medium mb-0 mr-3">Colors:</p>
+                {% for color in product.color_variant.all %}
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="checkbox" class="custom-control-input color-checkbox" id="color-{{ color.id }}"
+                           name="color-{{ color.id }}" value="{{ color.colorname }}">
+                    <label class="custom-control-label"
+                           for="color-{{ color.id }}">{{ color.colorname }}</label>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="d-flex align-items-center mb-5 pt-2">
+                <button onclick="addToCart()" class="btn btn-primary px-3 mr-3"><i
+                            class="fa fa-shopping-cart mr-1"></i> Add To Cart
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function addToCart() {
+        const productSlug = "{{ product.slug }}";
+        const selectedSizes = [];
+        document.querySelectorAll('.size-checkbox:checked').forEach(checkbox => {
+            selectedSizes.push(checkbox.value);
+        });
+
+        const selectedColors = [];
+        document.querySelectorAll('.color-checkbox:checked').forEach(checkbox => {
+            selectedColors.push(checkbox.value);
+        });
+
+        // Check if user is authenticated
+        const isAuthenticated = "{{ user.is_authenticated }}";
+        if (isAuthenticated === "False") {
+            // User is not authenticated, redirect to login
+            const redirectUrl = "{% url 'userlogin' %}?next={{ request.path }}";
+            window.location.href = redirectUrl;
+        } else {
+            // User is authenticated, proceed to add to cart
+            const baseUrl = "{% url 'add_to_cart' 'SLUG_PLACEHOLDER' %}".replace('SLUG_PLACEHOLDER', encodeURIComponent(productSlug));
+            const sizesParam = selectedSizes.length > 0 ? `sizes=${encodeURIComponent(selectedSizes.join(','))}` : '';
+            const colorsParam = selectedColors.length > 0 ? `colors=${encodeURIComponent(selectedColors.join(','))}` : '';
+
+            // Construct the URL
+            let url = baseUrl;
+            if (sizesParam && colorsParam) {
+                url += `?${sizesParam}&${colorsParam}`;
+            } else if (sizesParam) {
+                url += `?${sizesParam}`;
+            } else if (colorsParam) {
+                url += `?${colorsParam}`;
+            }
+
+            // Redirect to the URL
+            window.location.href = url;
+        }
+    }
+</script>
+
+{% endblock content %}

@@ -1,0 +1,71 @@
+{% extends "adminsite/dashboard.html" %}
+
+{% block admincontent %}
+
+<main id="main" class="main">
+
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1>Category Data</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item">Catagory</li>
+          </ol>
+        </nav>
+      </div>
+      <div>
+        <a href="{% url 'category_list' %}" class="btn btn-primary">Show Catagories</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="row container d-flex justify-content-center align-items-center">
+      <div class="col-lg-10">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Update Catagory</h5>
+
+            <!-- Add the form tag -->
+            <form method="post" enctype="multipart/form-data" onsubmit="return validateFields()">
+              <!-- Include CSRF token -->
+              {% csrf_token %}
+
+              <!-- Display form errors -->
+              <div id="message-div">
+                {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                <div class="alert alert-danger">
+                  {{ error }}
+                </div>
+                {% endfor %}
+                {% endfor %}
+              </div>
+
+              <!-- Include form fields with existing data -->
+              <div class="row mb-3">
+                <label for="titleInput" class="col-sm-2 col-form-label">Category Title</label>
+                <div class="col-sm-10">
+                  {{ form.catetory_name }}
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <a href="{% url 'category_list' %}">
+                  <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary">Update Product</button>
+                  </div>
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+</main><!-- End #main -->
+
+{% endblock %}

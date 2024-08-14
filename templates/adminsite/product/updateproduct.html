@@ -1,0 +1,226 @@
+{% extends "adminsite/dashboard.html" %}
+
+{% block admincontent %}
+
+<main id="main" class="main">
+
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1>Product Data</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item">Products</li>
+          </ol>
+        </nav>
+      </div>
+      <div>
+        <a href="{% url 'addproduct' %}" class="btn btn-primary">Show Product</a>
+      </div>
+    </div>
+  </div>
+  <section class="section">
+    <div class="row container d-flex justify-content-center align-items-center">
+      <div class="col-lg-10">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Update Product</h5>
+
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div id="message-div">
+                {% if messages %}
+                  {% for message in messages %}
+                    <div id="message-div" class="alert alert-primary">
+                      {{ message }}
+                    </div>
+                  {% endfor %}
+                {% endif %}
+              </div>
+
+              {% if form.errors %}
+                <div class="alert alert-danger">
+                  <ul>
+                    {% for field, errors in form.errors.items %}
+                      {% for error in errors %}
+                        <li>{{ error }}</li>
+                      {% endfor %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+
+              {% if formset.errors %}
+                <div class="alert alert-danger">
+                  <ul>
+                    {% for form in formset %}
+                      {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                      {% endfor %}
+                      {% for field in form %}
+                        {% for error in field.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                      {% endfor %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+
+              <div class="row mb-3">
+                <label for="titleInput" class="col-sm-2 col-form-label">Title</label>
+                <div class="col-sm-10">
+                  {{ form.product_name }}
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label for="categorySelect" class="col-sm-2 col-form-label">Category</label>
+                <div class="col-sm-10">
+                  {{ form.category }}
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="categorySelect" class="col-sm-2 col-form-label">Main Category</label>
+                <div class="col-sm-10">
+                  {{ form.maincategory }}
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="categorySelect" class="col-sm-2 col-form-label">Collections</label>
+                <div class="col-sm-10">
+                  {{ form.collection }}
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="categorySelect" class="col-sm-2 col-form-label">Is Trendy</label>
+                <div class="col-sm-10">
+                  {{ form.is_trendy }}
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label for="priceInput" class="col-sm-2 col-form-label">Price</label>
+                <div class="col-sm-10">
+                  {{ form.price }}
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="priceInput" class="col-sm-2 col-form-label">Discount Price</label>
+                <div class="col-sm-10">
+                  {{ form.descountprice }}
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label for="colorInput" class="col-sm-2 col-form-label">Colors</label>
+                <div class="col-sm-10">
+                  {{ form.color_variant }}
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label for="sizeInput" class="col-sm-2 col-form-label">Sizes</label>
+                <div class="col-sm-10">
+                  {{ form.size_variant }}
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label for="materialInput" class="col-sm-2 col-form-label">Materials</label>
+                <div class="col-sm-10">
+                  {{ form.material_variant }}
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label for="descriptionInput" class="col-sm-2 col-form-label">Description</label>
+                <div class="col-sm-10">
+                  {{ form.product_description }}
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label for="detailsDescriptionInput" class="col-sm-2 col-form-label">Detailed Description</label>
+                <div class="col-sm-10">
+                  {{ form.product_dtails_descripttion }}
+                </div>
+              </div>
+
+              <!-- Add formset for product images -->
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Product Images</label>
+                <div class="col-sm-10">
+                  {{ formset.management_form }}
+                  {% for form in formset %}
+                    <div class="row mb-3">
+                      <div class="col">
+                        {{ form.image.label_tag }}
+                        {{ form.image }}
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">Update Product</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+        
+</main><!-- End #main -->
+
+<script>
+  document.getElementById("colorSelect").addEventListener("change", function () {
+    var colorInput = document.getElementById("colorInput");
+    var colorSelect = document.getElementById("colorSelect");
+    var selectedColor = colorSelect.options[colorSelect.selectedIndex].text;
+    var colors = colorInput.value.split(", ").map(color => color.toLowerCase());
+    if (!colors.includes(selectedColor.toLowerCase())) {
+      if (colorInput.value === "") {
+        colorInput.value = selectedColor;
+      } else {
+        colorInput.value += ", " + selectedColor;
+      }
+    }
+  });
+
+  document.getElementById("sizeSelect").addEventListener("change", function () {
+    var sizeInput = document.getElementById("sizeInput");
+    var sizeSelect = document.getElementById("sizeSelect");
+    var selectedSize = sizeSelect.options[sizeSelect.selectedIndex].text;
+    var sizes = sizeInput.value.split(", ").map(size => size.toLowerCase());
+    if (!sizes.includes(selectedSize.toLowerCase())) {
+      if (sizeInput.value === "") {
+        sizeInput.value = selectedSize;
+      } else {
+        sizeInput.value += ", " + selectedSize;
+      }
+    }
+  });
+  document.getElementById("materialSelect").addEventListener("change", function () {
+    var materialInput = document.getElementById("materialInput");
+    var materialSelect = document.getElementById("materialSelect");
+    var selectedMaterial = materialSelect.options[materialSelect.selectedIndex].text;
+    var materials = materialInput.value.split(", ").map(material => material.toLowerCase());
+    if (!materials.includes(selectedMaterial.toLowerCase())) {
+      if (materialInput.value === "") {
+        materialInput.value = selectedMaterial;
+      } else {
+        materialInput.value += ", " + selectedMaterial;
+      }
+    }
+  });
+</script>
+
+{% endblock %}

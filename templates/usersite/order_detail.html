@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+    <!-- Page Header Start -->
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Order Detils</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="/">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Order Detils</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+    
+    <!-- Order details section Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Order details</span></h2>
+        </div>
+        <div class="row px-xl-5">
+            <div class="col-lg-7 mb-5">
+                <div class="contact-form">
+                    <p><strong>Order Number:</strong> {{ order.id }}</p>
+                    <h2>Order Items</h2>
+                    <ul>
+                        {% for item in order_items %}
+                            <li>
+                                Product: {{ item.product_name }}<br>
+                                Price: {{ item.price }}<br>
+                                Color: {{ item.color }}<br>
+                                Size: {{ item.size }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+    
+                    <p><strong>Total Amount Paid:</strong> ${{ order.total_price }}</p>
+                </div>
+            </div>
+            <div class="col-lg-5 mb-5">
+                <h5 class="font-weight-semi-bold mb-3">Get In Tech</h5>
+                <p>Your order is being processed and you will receive a confirmation email shortly with the details of your purchase.</p>
+                <div class="d-flex flex-column mb-3">
+                    <h5 class="font-weight-semi-bold mb-3">Store 1</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>i9 Islamabad Pakistan</p>
+                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>kamranzaman0502@gmail.com</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt text-primary mr-3"></i>+92 344 7905948</p>
+                </div>
+                <div class="d-flex flex-column">
+                    <h5 class="font-weight-semi-bold mb-3">Store 2</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
+                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
+                    <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Order details section End -->
+{% endblock content %}
